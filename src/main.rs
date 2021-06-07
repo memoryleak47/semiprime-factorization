@@ -88,6 +88,5 @@ fn main() {
 		Some(x) => x.parse().unwrap(),
 		None => 7,
 	};
-    let a = div(semi, k);
-    println!("{} * {}", a, semi/a);
+    div(semi, k);
 }
