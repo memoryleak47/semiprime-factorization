@@ -59,13 +59,18 @@ fn coprimes(mut primes: Vec<Num>) -> Box<dyn Iterator<Item=Num> + Send> {
 	}))
 }
 
-fn div(semi: Num, k: usize) -> Num {
+fn on_solution_found(semi: Num, x: Num) -> ! {
+	println!("{} * {}", x, semi/x);
+	std::process::exit(0)
+}
+
+fn div(semi: Num, k: usize) -> ! {
 	let semi_sqrt = sqrt(semi);
 
 	let primes = get_k_primes(k);
 
 	for &p in &primes {
-		if semi % p == 0 { return p; }
+		if semi % p == 0 { on_solution_found(semi, p); }
 	}
 
 	let prod: Num = primes.iter().fold(1, |x, y| x*y);
@@ -73,8 +78,7 @@ fn div(semi: Num, k: usize) -> Num {
 	coprimes(primes).par_bridge().for_each(|co| {
 		for x in (co..semi_sqrt).step_by(prod as usize) {
 			if semi % x == 0 && x != 1 {
-				println!("{} * {}", x, semi/x);
-				std::process::exit(0);
+				on_solution_found(semi, x);
 			}
 		}
 	});
